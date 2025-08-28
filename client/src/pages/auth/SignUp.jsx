@@ -5,48 +5,50 @@ import {
   FiLock,
   FiEye,
   FiEyeOff,
-  FiLogIn,
-  FiGithub,
+  FiUser,
   FiUserPlus,
+  FiGithub,
 } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
-// Tailwind + react-icons + react-hot-toast login component
-// Drop this into your app and render <Login onLogin={(user)=>...} />
-// Make sure you've installed deps: `npm i react-hot-toast react-icons`
-
 const validateEmail = (email) => /[^\s@]+@[^\s@]+\.[^\s@]+/.test(email);
 
-export default function Login({ onLogin }) {
+export default function Signup({ onSignup }) {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [remember, setRemember] = useState(true);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Simple client-side validation
+    if (name.trim().length < 2) {
+      toast.error("Please enter your full name");
+      return;
+    }
     if (!validateEmail(email)) {
-      toast.error("Please enter a valid email address");
+      toast.error("Please enter a valid email");
       return;
     }
     if (password.length < 6) {
       toast.error("Password must be at least 6 characters");
       return;
     }
+    if (password !== confirm) {
+      toast.error("Passwords do not match");
+      return;
+    }
 
     try {
       setLoading(true);
-      // Simulate API call
       await new Promise((res) => setTimeout(res, 1000));
 
-      // Mocked success
-      toast.success("Welcome back! Redirecting...");
-      onLogin?.({ email });
+      toast.success("Account created successfully!");
+      onSignup?.({ name, email });
     } catch (err) {
-      toast.error("Login failed. Try again.");
+      toast.error("Signup failed. Try again.");
     } finally {
       setLoading(false);
     }
@@ -54,10 +56,12 @@ export default function Login({ onLogin }) {
 
   const handleProvider = async (provider) => {
     toast.loading(`Connecting to ${provider}...`, { id: "oauth" });
-    // Simulate
     await new Promise((r) => setTimeout(r, 900));
-    toast.success(`${provider} sign-in complete`, { id: "oauth" });
-    onLogin?.({ email: `${provider.toLowerCase()}@example.com` });
+    toast.success(`${provider} sign-up complete`, { id: "oauth" });
+    onSignup?.({
+      name: provider,
+      email: `${provider.toLowerCase()}@example.com`,
+    });
   };
 
   return (
@@ -68,15 +72,33 @@ export default function Login({ onLogin }) {
         <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl p-6 sm:p-8">
           <div className="text-center mb-6">
             <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 mb-3">
-              <FiLogIn className="text-indigo-400 text-2xl" />
+              <FiUserPlus className="text-indigo-400 text-2xl" />
             </div>
             <h1 className="text-white text-2xl font-semibold tracking-tight">
-              Sign in
+              Create account
             </h1>
             <p className="text-slate-300 text-sm mt-1">Resume Builder</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Full Name */}
+            <div>
+              <label className="block text-slate-200 text-sm mb-1">
+                Full Name
+              </label>
+              <div className="relative">
+                <FiUser className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                <input
+                  type="text"
+                  className="w-full pl-10 pr-3 py-2 rounded-xl bg-slate-900/60 border border-white/10 text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  placeholder="John Doe"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </div>
+            </div>
+
+            {/* Email */}
             <div>
               <label className="block text-slate-200 text-sm mb-1">Email</label>
               <div className="relative">
@@ -92,6 +114,7 @@ export default function Login({ onLogin }) {
               </div>
             </div>
 
+            {/* Password */}
             <div>
               <label className="block text-slate-200 text-sm mb-1">
                 Password
@@ -104,7 +127,6 @@ export default function Login({ onLogin }) {
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  autoComplete="current-password"
                 />
                 <button
                   type="button"
@@ -116,24 +138,24 @@ export default function Login({ onLogin }) {
               </div>
             </div>
 
-            <div className="flex items-center justify-between text-sm">
-              <label className="inline-flex items-center gap-2 text-slate-300">
-                <input
-                  type="checkbox"
-                  className="rounded-md bg-slate-900/60 border-white/10"
-                  checked={remember}
-                  onChange={(e) => setRemember(e.target.checked)}
-                />
-                Remember me
+            {/* Confirm Password */}
+            <div>
+              <label className="block text-slate-200 text-sm mb-1">
+                Confirm Password
               </label>
-              <button
-                type="button"
-                onClick={() => toast("Password reset link sent (demo)")}
-                className="text-indigo-400 hover:text-indigo-300">
-                Forgot password?
-              </button>
+              <div className="relative">
+                <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                <input
+                  type={showPassword ? "text" : "password"}
+                  className="w-full pl-10 pr-3 py-2 rounded-xl bg-slate-900/60 border border-white/10 text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  placeholder="••••••••"
+                  value={confirm}
+                  onChange={(e) => setConfirm(e.target.value)}
+                />
+              </div>
             </div>
 
+            {/* Submit */}
             <button
               type="submit"
               disabled={loading}
@@ -141,22 +163,24 @@ export default function Login({ onLogin }) {
               {loading ? (
                 <span className="inline-flex items-center gap-2">
                   <span className="h-4 w-4 rounded-full border-2 border-white/50 border-t-transparent animate-spin" />
-                  Signing in...
+                  Creating account...
                 </span>
               ) : (
                 <>
-                  <FiLogIn />
-                  Sign in
+                  <FiUserPlus />
+                  Sign up
                 </>
               )}
             </button>
 
+            {/* Divider */}
             <div className="flex items-center gap-2">
               <div className="h-px flex-1 bg-white/10" />
-              <span className="text-xs text-slate-400">or continue with</span>
+              <span className="text-xs text-slate-400">or sign up with</span>
               <div className="h-px flex-1 bg-white/10" />
             </div>
 
+            {/* Providers */}
             <div className="grid grid-cols-2 gap-3">
               <button
                 type="button"
@@ -168,7 +192,6 @@ export default function Login({ onLogin }) {
                 type="button"
                 onClick={() => handleProvider("Google")}
                 className="inline-flex items-center justify-center gap-2 py-2 rounded-xl bg-slate-900/60 border border-white/10 text-slate-100 hover:bg-slate-900 transition">
-                {/* Simple Google G using a circle */}
                 <span className="inline-flex items-center justify-center w-4 h-4 rounded-full border border-white/40 text-[10px]">
                   G
                 </span>
@@ -176,18 +199,13 @@ export default function Login({ onLogin }) {
               </button>
             </div>
 
-            <p className="text-center flex items-center justify-center text-slate-300 text-sm">
-              New here?
-              <button className="inline-flex items-center gap-1 cursor-pointer text-indigo-400 hover:text-indigo-300 ml-1">
-                <FiUserPlus /> <Link to={"/signup"}>Create an account</Link>
+            <p className="flex justify-center items-center text-slate-300 text-sm">
+              Already have an account?
+              <button className="inline-flex items-center gap-1 text-indigo-400 hover:text-indigo-300 ml-1">
+                <FiUser /> <Link to={"/login"}>Sign in</Link>
               </button>
             </p>
           </form>
-
-          <p className="text-[11px] text-slate-400 text-center mt-6">
-            Demo: <span className="text-slate-200">user@demo.dev</span> /{" "}
-            <span className="text-slate-200">secret123</span>
-          </p>
         </div>
 
         <p className="text-center text-slate-400 text-xs mt-4">
