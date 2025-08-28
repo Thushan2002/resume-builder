@@ -5,6 +5,19 @@
   --font-display: "Outfit", sans-serif;
   --breakpoint-3xl: 1920px;
   --color-primary: #9328E7;
+
+  /* animations */
+  --animate-text-shine: text-shine 3s linear infinite;
+
+  @keyframes text-shine {
+    0% {
+      background-position: 100% 0%;
+    }
+
+    100% {
+      background-position: 200% 0%;
+    }
+  }
 }
 
 @layer base {
