@@ -6,14 +6,17 @@ export const signUp = async (req, res) => {
     try {
         const { username, email, password } = req.body
 
+        console.log("suc", req.body);
+
+
         if (!username || !email || !password) {
             return res.status(400).json({ success: false, message: "All fields required" })
         }
-        const exisitingUsername = await User.find({ username })
+        const exisitingUsername = await User.findOne({ username })
         if (exisitingUsername) {
-            return res.status(400).json({ success: false, message: "Username Already exists" })
+            return res.status(400).json({ success: false, message: "Username Already existsra" })
         }
-        const exisitingEmail = await User.find({ email })
+        const exisitingEmail = await User.findOne({ email })
         if (exisitingEmail) {
             return res.status(400).json({ success: false, message: "Email Already exists" })
         }
@@ -32,14 +35,15 @@ export const signUp = async (req, res) => {
             password: hashedPassword
         })
 
-        if (newUser) {
-            generateToken(newUser._id, res)
-            await newUser.save()
-            res.status(200).json({ success: true, message: "User Created Successfully", user: newUser })
-        } else {
-            res.status(400).json({ success: false, message: "Invalid User Data" })
-        }
+
+        generateToken(newUser._id, res)
+        await newUser.save()
+        res.status(200).json({ success: true, message: "User Created Successfully", user: newUser })
+
+
+
     } catch (error) {
+        console.log(req.body);
         console.log(`Error in Signup Controller ${error}`);
         res.status(500).json({ error: "Internal Server Error" })
     }

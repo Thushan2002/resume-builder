@@ -10,22 +10,24 @@ import {
   FiGithub,
 } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import { AppContext, useAppContext } from "../../context/AppContext";
 
-const validateEmail = (email) => /[^\s@]+@[^\s@]+\.[^\s@]+/.test(email);
-
-export default function Signup({ onSignup }) {
-  const [name, setName] = useState("");
+const SignUp = () => {
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { axios, setUser } = useAppContext();
+
+  const validateEmail = (email) => /[^\s@]+@[^\s@]+\.[^\s@]+/.test(email);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (name.trim().length < 2) {
-      toast.error("Please enter your full name");
+    if (username.trim().length < 2) {
+      toast.error("Please enter your full username");
       return;
     }
     if (!validateEmail(email)) {
@@ -43,26 +45,35 @@ export default function Signup({ onSignup }) {
 
     try {
       setLoading(true);
-      await new Promise((res) => setTimeout(res, 1000));
+      const { data } = await axios.post("/api/user/signup", {
+        username,
+        email,
+        password,
+      });
+      console.log("data", data);
 
-      toast.success("Account created successfully!");
-      onSignup?.({ name, email });
+      if (data.success) {
+        setUser(data.user);
+        toast.success(data.message);
+      } else {
+        toast.error(data.message);
+      }
     } catch (err) {
-      toast.error("Signup failed. Try again.");
+      toast.error(err.message);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleProvider = async (provider) => {
-    toast.loading(`Connecting to ${provider}...`, { id: "oauth" });
-    await new Promise((r) => setTimeout(r, 900));
-    toast.success(`${provider} sign-up complete`, { id: "oauth" });
-    onSignup?.({
-      name: provider,
-      email: `${provider.toLowerCase()}@example.com`,
-    });
-  };
+  // const handleProvider = async (provider) => {
+  //   toast.loading(`Connecting to ${provider}...`, { id: "oauth" });
+  //   await new Promise((r) => setTimeout(r, 900));
+  //   toast.success(`${provider} sign-up complete`, { id: "oauth" });
+  //   onSignup?.({
+  //     name: provider,
+  //     email: `${provider.toLowerCase()}@example.com`,
+  //   });
+  // };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
@@ -92,8 +103,8 @@ export default function Signup({ onSignup }) {
                   type="text"
                   className="w-full pl-10 pr-3 py-2 rounded-xl bg-slate-900/60 border border-white/10 text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                   placeholder="John Doe"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                 />
               </div>
             </div>
@@ -214,4 +225,6 @@ export default function Signup({ onSignup }) {
       </div>
     </div>
   );
-}
+};
+
+export default SignUp;
