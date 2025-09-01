@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
 import {
@@ -10,6 +11,7 @@ import {
   FiUserPlus,
 } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import { useAppContext } from "../../context/AppContext";
 
 // Tailwind + react-icons + react-hot-toast login component
 // Drop this into your app and render <Login onLogin={(user)=>...} />
@@ -23,6 +25,7 @@ export default function Login({ onLogin }) {
   const [showPassword, setShowPassword] = useState(false);
   const [remember, setRemember] = useState(true);
   const [loading, setLoading] = useState(false);
+  const { axios, user, setUser } = useAppContext();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -40,7 +43,7 @@ export default function Login({ onLogin }) {
     try {
       setLoading(true);
       // Simulate API call
-      await new Promise((res) => setTimeout(res, 1000));
+      await axios.post("/api/user/login", { email, password });
 
       // Mocked success
       toast.success("Welcome back! Redirecting...");
@@ -52,13 +55,13 @@ export default function Login({ onLogin }) {
     }
   };
 
-  const handleProvider = async (provider) => {
-    toast.loading(`Connecting to ${provider}...`, { id: "oauth" });
-    // Simulate
-    await new Promise((r) => setTimeout(r, 900));
-    toast.success(`${provider} sign-in complete`, { id: "oauth" });
-    onLogin?.({ email: `${provider.toLowerCase()}@example.com` });
-  };
+  // const handleProvider = async (provider) => {
+  //   toast.loading(`Connecting to ${provider}...`, { id: "oauth" });
+  //   // Simulate
+  //   await new Promise((r) => setTimeout(r, 900));
+  //   toast.success(`${provider} sign-in complete`, { id: "oauth" });
+  //   onLogin?.({ email: `${provider.toLowerCase()}@example.com` });
+  // };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
