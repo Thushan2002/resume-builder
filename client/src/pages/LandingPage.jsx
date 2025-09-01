@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import hero_img from "../assets/images/hero.png";
-import { Link } from "react-router-dom";
+
+import Navbar from "../components/Navbar";
 
 const LandingPage = () => {
   const [openAuthModal, setOpenAuthModal] = useState(false);
@@ -9,15 +10,7 @@ const LandingPage = () => {
     <div className="w-full min-h-full text-white">
       <div className="mx-auto px-4 py-6">
         {/* header */}
-        <header className=" px-2 flex justify-between items-center">
-          <h1 className="bg-radial text-3xl from-white to-gray-600 font-bold bg-clip-text text-transparent bg-[length:200%_200%] animate-text-shine">
-            ResumeNow
-          </h1>
-          <button className="w-fit px-6 py-2 font-semibold text-lg tracking-wide bg-white text-black rounded-xl hover:scale-105 cursor-pointer">
-            <Link to={"/login"}>Login</Link>
-          </button>
-        </header>
-
+        <Navbar />
         {/* Hero  */}
         <div className="w-full min-h-full flex flex-col sm:flex-row justify-between gap-5 items-center mb-8">
           <div className="min-h-screen flex flex-col items-start justify-center px-6 w-2/3 ">
