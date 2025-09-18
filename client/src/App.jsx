@@ -8,7 +8,7 @@ import Footer from "./components/Footer";
 
 const App = () => {
   return (
-    <div className="container mx-auto min-h-full bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div className="mx-auto md:px-6 lg:px-12 min-h-full bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
