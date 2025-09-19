@@ -2,7 +2,7 @@ import express from "express"
 import dotenv from "dotenv"
 import { connectDB } from "./configs/db.js"
 import cookieParser from "cookie-parser"
-import userRouter from "./routes/userRoutse.js"
+import userRouter from "./routes/userRoutes.js"
 import cors from "cors"
 
 dotenv.config()
