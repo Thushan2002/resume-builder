@@ -1,6 +1,7 @@
 import User from "../models/userModel.js"
 import bcrypt from "bcryptjs"
-import { generateToken } from "../utils/generateToken.js"
+import generateToken from "../utils/generateToken.js"
+
 
 export const signUp = async (req, res) => {
     try {
@@ -35,12 +36,14 @@ export const signUp = async (req, res) => {
 
         generateToken(newUser._id, res)
         await newUser.save()
-        res.status(200).json({ success: true, message: "User Created Successfully", user: newUser })
-
-
+        res.status(200).json({
+            success: true, message: "User Created Successfully", user: {
+                username,
+                email,
+            }
+        })
 
     } catch (error) {
-        console.log(req.body);
         console.log(`Error in Signup Controller ${error}`);
         res.status(500).json({ error: "Internal Server Error" })
     }
@@ -65,11 +68,45 @@ export const login = async (req, res) => {
 
         generateToken(user._id, res)
 
-        res.status(200).json({ success: true, message: "Login successful", user: user })
+        res.status(200).json({
+            success: true, message: "Login successful", user: {
+                username,
+                email,
+            }
+        })
 
     } catch (error) {
-        console.log(req.body);
         console.log(`Error in Login Controller ${error}`);
         res.status(500).json({ error: "Internal Server Error" })
     }
 }
+
+export const authUser = (req, res) => {
+    try {
+        const user = req.user
+
+        if (!user) {
+            return res.status(404).json({ success: false, message: "No User found" })
+        }
+        return res.status(200).json({ success: true, user })
+
+    } catch (error) {
+        console.log(`Error in authUser Controller ${error}`);
+        res.status(500).json({ error: "Internal Server Error" })
+    }
+}
+
+export const logout = async (req, res) => {
+    try {
+        res.clearCookie("jwt", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        });
+
+        res.status(200).json({ message: "Logout Successful" });
+    } catch (error) {
+        console.log(`Error in Logout Controller: ${error}`);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
