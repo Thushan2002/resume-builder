@@ -51,7 +51,6 @@ const SignUp = () => {
         email,
         password,
       });
-      console.log("data", data);
 
       if (data.success) {
         setUser(data.user);

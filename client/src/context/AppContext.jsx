@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -10,10 +10,27 @@ export const AppContextProvider = ({ children }) => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
 
+  const fetchAuthUser = async () => {
+    try {
+      const { data } = await axios.get("/api/user/authMe", {
+        withCredentials: true,
+      });
+      if (data.success) {
+        setUser(data.user);
+      }
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    fetchAuthUser();
+  }, []);
+
   const value = {
     axios,
     user,
+    setUser,
     navigate,
+    user,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

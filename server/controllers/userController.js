@@ -69,10 +69,7 @@ export const login = async (req, res) => {
         generateToken(user._id, res)
 
         res.status(200).json({
-            success: true, message: "Login successful", user: {
-                username,
-                email,
-            }
+            success: true, message: "Login successful", user
         })
 
     } catch (error) {
@@ -104,7 +101,7 @@ export const logout = async (req, res) => {
             sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
         });
 
-        res.status(200).json({ message: "Logout Successful" });
+        res.status(200).json({ success: true, message: "Logout Successful" });
     } catch (error) {
         console.log(`Error in Logout Controller: ${error}`);
         res.status(500).json({ error: "Internal Server Error" });
