@@ -2,15 +2,17 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAppContext } from "../context/AppContext";
 import toast from "react-hot-toast";
+import Spinner from "./Spinner";
 
 const Navbar = ({ state }) => {
   //   const [state, setState] = useState("");
+  const [loading, setLoading] = useState(false);
   const { user, navigate, setUser, axios } = useAppContext();
 
   const handleLogout = async () => {
     try {
+      setLoading(true);
       const { data } = await axios.post("/api/user/logout");
-
       if (data.success) {
         toast.success(data.message);
         setUser(null);
@@ -18,12 +20,13 @@ const Navbar = ({ state }) => {
       }
     } catch (error) {
       toast.error(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="p-5">
-      {" "}
       <header className="px-2 flex justify-between items-center">
         <h1
           onClick={() => navigate("/")}
@@ -34,8 +37,9 @@ const Navbar = ({ state }) => {
         {user ? (
           <button
             onClick={handleLogout}
+            disabled={loading}
             className="w-fit px-6 py-2 font-semibold text-lg tracking-wide bg-white text-black rounded-xl hover:scale-105 cursor-pointer">
-            Logout
+            {loading ? <Spinner size={"small"} color={"black"} /> : "Logout"}
           </button>
         ) : (
           <button className="w-fit px-6 py-2 font-semibold text-lg tracking-wide bg-white text-black rounded-xl hover:scale-105 cursor-pointer">
