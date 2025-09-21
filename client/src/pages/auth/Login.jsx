@@ -13,6 +13,7 @@ import {
 import { Link } from "react-router-dom";
 import { useAppContext } from "../../context/AppContext";
 import Navbar from "../../components/Navbar";
+import Spinner from "../../components/Spinner";
 
 // Tailwind + react-icons + react-hot-toast login component
 // Drop this into your app and render <Login onLogin={(user)=>...} />
@@ -139,10 +140,7 @@ export default function Login({ onLogin }) {
                 disabled={loading}
                 className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-xl bg-indigo-500 hover:bg-indigo-600 disabled:opacity-60 text-white font-medium shadow-lg shadow-indigo-900/30 transition">
                 {loading ? (
-                  <span className="inline-flex items-center gap-2">
-                    <span className="h-4 w-4 rounded-full border-2 border-white/50 border-t-transparent animate-spin" />
-                    Signing in...
-                  </span>
+                  <Spinner size={"small"} color={"white"} />
                 ) : (
                   <>
                     <FiLogIn />
