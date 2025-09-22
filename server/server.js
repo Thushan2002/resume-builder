@@ -4,6 +4,9 @@ import { connectDB } from "./configs/db.js"
 import cookieParser from "cookie-parser"
 import userRouter from "./routes/userRoutes.js"
 import cors from "cors"
+import path from "path"
+import { fileURLToPath } from "url"
+import resumeRouter from "./routes/resumeRoutes.js"
 
 dotenv.config()
 
@@ -22,6 +25,19 @@ app.get("/", (req, res) => {
 
 // app routes
 app.use("/api/user", userRouter)
+app.use("/api/resume", resumeRouter)
+
+
+// Serve Uploads folder
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+app.use("/uploads", express.static(path.join(__dirname, "uploads"), {
+    setHeaders: (res, path) => {
+        res.set("Access-Control-Allow-Origin", "http://localhost:5173")
+    }
+}))
 
 const PORT = process.env.PORT || "3000"
 
