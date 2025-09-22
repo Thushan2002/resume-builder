@@ -1,5 +1,5 @@
 import multer from "multer"
-const path = require('path');
+import path from "path";
 
 // Set storage engine
 const storage = multer.diskStorage({
