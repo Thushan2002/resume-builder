@@ -6,6 +6,7 @@ import userRouter from "./routes/userRoutes.js"
 import cors from "cors"
 import path from "path"
 import { fileURLToPath } from "url"
+import resumeRouter from "./routes/resumeRoutes.js"
 
 dotenv.config()
 
@@ -24,6 +25,7 @@ app.get("/", (req, res) => {
 
 // app routes
 app.use("/api/user", userRouter)
+app.use("/api/resume", resumeRouter)
 
 
 // Serve Uploads folder
