@@ -21,7 +21,7 @@ const SignUp = () => {
   const [confirm, setConfirm] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { axios, setUser } = useAppContext();
+  const { axios, setUser, navigate } = useAppContext();
 
   const validateEmail = (email) => /[^\s@]+@[^\s@]+\.[^\s@]+/.test(email);
 
@@ -55,6 +55,7 @@ const SignUp = () => {
 
       if (data.success) {
         setUser(data.user);
+        navigate("/dashboard");
         toast.success(data.message);
       } else {
         toast.error(data.message);

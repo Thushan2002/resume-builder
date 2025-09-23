@@ -30,7 +30,6 @@ export const AppContextProvider = ({ children }) => {
     user,
     setUser,
     navigate,
-    user,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

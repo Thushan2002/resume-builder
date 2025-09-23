@@ -21,13 +21,13 @@ import Spinner from "../../components/Spinner";
 
 const validateEmail = (email) => /[^\s@]+@[^\s@]+\.[^\s@]+/.test(email);
 
-export default function Login({ onLogin }) {
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [remember, setRemember] = useState(true);
   const [loading, setLoading] = useState(false);
-  const { axios, user, setUser } = useAppContext();
+  const { axios, user, setUser, navigate } = useAppContext();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -45,11 +45,14 @@ export default function Login({ onLogin }) {
     try {
       setLoading(true);
       // Simulate API call
-      await axios.post("/api/user/login", { email, password });
-
-      // Mocked success
-      toast.success("Welcome back! Redirecting...");
-      onLogin?.({ email });
+      const { data } = await axios.post("/api/user/login", { email, password });
+      if (data.success) {
+        setUser(data.user);
+        toast.success(data.message);
+        navigate("/dashboard");
+      } else {
+        toast.error(data.message);
+      }
     } catch (err) {
       toast.error("Login failed. Try again.");
     } finally {
@@ -191,4 +194,6 @@ export default function Login({ onLogin }) {
       </div>
     </>
   );
-}
+};
+
+export default Login;
