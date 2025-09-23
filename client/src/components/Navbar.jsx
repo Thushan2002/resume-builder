@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useAppContext } from "../context/AppContext";
 import toast from "react-hot-toast";
 import Spinner from "./Spinner";
+import ProfileCard from "./cards/ProfileCard";
 
 const Navbar = ({ state }) => {
   //   const [state, setState] = useState("");
@@ -33,14 +34,8 @@ const Navbar = ({ state }) => {
           className="bg-radial text-3xl from-white to-gray-600 font-bold bg-clip-text text-transparent bg-[length:200%_200%] animate-text-shine cursor-pointer">
           ResumeNow
         </h1>
-
         {user ? (
-          <button
-            onClick={handleLogout}
-            disabled={loading}
-            className="w-fit px-6 py-2 font-semibold text-lg tracking-wide bg-white text-black rounded-xl hover:scale-105 cursor-pointer">
-            {loading ? <Spinner size={"small"} color={"black"} /> : "Logout"}
-          </button>
+          <ProfileCard />
         ) : (
           <button className="w-fit px-6 py-2 font-semibold text-lg tracking-wide bg-white text-black rounded-xl hover:scale-105 cursor-pointer">
             <Link to={state === "login" ? "/signup" : "/login"}>
