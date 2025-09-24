@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { FiX } from "react-icons/fi";
 
-const EditProfile = ({ editProfile, setEditProfile }) => {
+const isOpen = ({ isOpen, onclose }) => {
   const [profile, setProfile] = React.useState({
     picture: "",
     name: "",
@@ -9,14 +9,14 @@ const EditProfile = ({ editProfile, setEditProfile }) => {
   });
 
   useEffect(() => {
-    if (typeof editProfile === "object" && editProfile !== null) {
+    if (typeof isOpen === "object" && isOpen !== null) {
       setProfile({
-        picture: editProfile.picture || "",
-        name: editProfile.name || "",
-        email: editProfile.email || "",
+        picture: isOpen.picture || "",
+        name: isOpen.name || "",
+        email: isOpen.email || "",
       });
     }
-  }, [editProfile]);
+  }, [isOpen]);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -37,19 +37,19 @@ const EditProfile = ({ editProfile, setEditProfile }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // TODO: handle update logic (API call or parent callback)
-    setEditProfile(false);
+    onclose();
   };
 
   return (
     <>
-      {editProfile && (
+      {isOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/50">
           <div className="bg-white text-black p-6 rounded-2xl shadow-lg w-96 relative">
             {/* Header */}
             <div className="flex items-center justify-between mb-4">
               <p className="text-lg font-semibold">Edit Your Profile</p>
               <button
-                onClick={() => setEditProfile(false)}
+                onClick={() => onclose()}
                 className="text-gray-500 hover:text-gray-800">
                 <FiX size={20} />
               </button>
@@ -86,4 +86,4 @@ const EditProfile = ({ editProfile, setEditProfile }) => {
   );
 };
 
-export default EditProfile;
+export default isOpen;
