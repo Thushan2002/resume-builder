@@ -4,27 +4,12 @@ import { useAppContext } from "../context/AppContext";
 import toast from "react-hot-toast";
 import Spinner from "./Spinner";
 import ProfileCard from "./cards/ProfileCard";
+import { MdDashboard } from "react-icons/md";
 
 const Navbar = ({ state }) => {
   //   const [state, setState] = useState("");
   const [loading, setLoading] = useState(false);
   const { user, navigate, setUser, axios } = useAppContext();
-
-  const handleLogout = async () => {
-    try {
-      setLoading(true);
-      const { data } = await axios.post("/api/user/logout");
-      if (data.success) {
-        toast.success(data.message);
-        setUser(null);
-        navigate("/login");
-      }
-    } catch (error) {
-      toast.error(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <div className="p-5">
@@ -35,7 +20,15 @@ const Navbar = ({ state }) => {
           ResumeNow
         </h1>
         {user ? (
-          <ProfileCard />
+          <div className="flex justify-center items-center gap-6">
+            <Link
+              to={"/dashboard"}
+              className="flex items-center gap-2 px-4 py-2 text-gray-400 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-all duration-200 font-medium group">
+              <MdDashboard />
+              Dashboard
+            </Link>
+            <ProfileCard />
+          </div>
         ) : (
           <button className="w-fit px-6 py-2 font-semibold text-lg tracking-wide bg-white text-black rounded-xl hover:scale-105 cursor-pointer">
             <Link to={state === "login" ? "/signup" : "/login"}>
