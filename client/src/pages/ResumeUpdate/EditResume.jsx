@@ -416,9 +416,12 @@ const EditResume = () => {
           <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 mb-8">
             <div className="flex-1">
               <TitleInput
-                value={resumeData.title}
-                onChange={(value) =>
-                  setResumeData((prev) => ({ ...prev, title: value }))
+                title={resumeData.title}
+                setTitle={(value) =>
+                  setResumeData((prev) => ({
+                    ...prev,
+                    title: value,
+                  }))
                 }
                 className="text-2xl font-bold text-white bg-gray-800 border-gray-700"
               />
@@ -823,7 +826,7 @@ const EditResume = () => {
       {/* Preview Modal */}
       {openPreviewModal && (
         <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
-          <div className="bg-gray-800 rounded-xl max-w-6xl w-full max-h-[90vh] overflow-hidden border border-gray-700">
+          <div className="bg-gray-800 rounded-xl max-w-6xl w-full  border border-gray-700">
             <div className="p-4 border-b border-gray-700 flex items-center justify-between">
               <h3 className="text-lg font-semibold text-white flex items-center gap-2">
                 <FaEye className="text-blue-400" />
